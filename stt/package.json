@@ -1,0 +1,50 @@
+{
+  "name": "electron-stt",
+  "version": "1.0.0",
+  "description": "Realtime Speech‑to‑Text from Mic or System Audio",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build-mac": "electron-builder --mac",
+    "build-win": "electron-builder --win"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@electron/remote": "^2.0.12",
+    "vosk-browser": "^0.0.8"
+  },
+  "devDependencies": {
+    "electron": "^28.3.0",
+    "electron-builder": "^24.6.0",
+    "electron-reload": "^1.5.0"
+  },
+  "build": {
+    "appId": "com.yourname.electronstt",
+    "productName": "ElectronSTT",
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.utilities",
+      "entitlements": "entitlements.mac.plist",
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "ElectronSTT needs microphone access to transcribe spoken audio.",
+        "NSAudioCaptureUsageDescription": "ElectronSTT needs system audio capture access to transcribe speaker output."
+      }
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "files": [
+      "src/**/*",
+      "assets/model/**/*",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "assets/model",
+        "to": "model",
+        "filter": ["**/*"]
+      }
+    ]
+  }
+}
