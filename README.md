@@ -24,21 +24,19 @@ A cross-platform Electron app that sits **invisibly on your screen during screen
 ## � Screenshots
 
 ### Main Interface — Assistant Tab
-![Ghost Main Interface](./assets/screenshots/main-interface.png)
+<img width="421" height="640" alt="Screenshot 2026-05-01 at 15 32 48" src="https://github.com/user-attachments/assets/f18a0594-a37b-4eab-a56c-6acfbae14cc8" />
+
 *The Assistant tab with audio controls, heard transcript, manual question input, and AI response display.*
 
 ### Settings Tab
-![Settings Panel](./assets/screenshots/settings.png)
+<img width="420" height="643" alt="Screenshot 2026-05-01 at 15 31 44" src="https://github.com/user-attachments/assets/291fccf5-0fc0-4ad4-aac5-dee2fac41bdf" />
+
 *Configure NVIDIA API key, select AI model, adjust opacity, and toggle stealth mode.*
 
 ### Context/Resume Tab
-![Context Upload](./assets/screenshots/context-upload.png)
+<img width="419" height="637" alt="Screenshot 2026-05-01 at 15 33 08" src="https://github.com/user-attachments/assets/a0f5867e-24ba-4a81-af48-0812e968a3f0" />
+
 *Upload your resume and add interview context so AI personalizes answers to your role and experience.*
-
-### Stealth Mode Demo
-![Stealth Mode](./assets/screenshots/stealth-mode-demo.png)
-*The window stays invisible during screen sharing while running in the background.*
-
 ---
 
 ## �🚀 Quick Start
