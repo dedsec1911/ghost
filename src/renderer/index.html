@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ghost</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ── Title bar (drag zone) ── -->
+    <div id="titlebar" class="titlebar">
+      <div id="drag-handle" class="drag-handle">
+        <span class="app-name">💀 Ghost</span>
+        <span id="status-dot" class="status-dot idle" title="Listening status"></span>
+      </div>
+      <div class="titlebar-actions">
+        <button id="btn-settings" class="tb-btn" title="Settings">⚙</button>
+        <button id="btn-context" class="tb-btn" title="Context / Resume">📄</button>
+        <button id="btn-minimize" class="tb-btn" title="Minimize">─</button>
+        <button id="btn-close" class="tb-btn close-btn" title="Hide">✕</button>
+      </div>
+    </div>
+
+    <!-- ── Tab bar ── -->
+    <div class="tabs">
+      <button class="tab active" data-tab="assistant">Assistant</button>
+      <button class="tab" data-tab="transcript">Transcript</button>
+      <button class="tab" data-tab="context">Context</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </div>
+
+    <!-- ══════════════════ ASSISTANT TAB ══════════════════ -->
+    <div id="tab-assistant" class="tab-content active">
+
+      <!-- Audio source controls -->
+      <div class="audio-controls">
+        <label class="switch-label">
+          <span>🎤 Mic</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-mic" checked />
+            <span class="slider"></span>
+          </label>
+        </label>
+        <label class="switch-label">
+          <span>🔊 Speaker</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-speaker" checked />
+            <span class="slider"></span>
+          </label>
+        </label>
+        <label class="switch-label">
+          <span>Auto-listen</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-auto" checked />
+            <span class="slider"></span>
+          </label>
+        </label>
+        <button id="btn-listen" class="btn-primary listen-btn" title="Ctrl+Shift+L">
+          <span id="listen-icon">▶</span> Listen
+        </button>
+      </div>
+
+      <!-- Transcript display (what was heard) -->
+      <div class="section-header">
+        <span>📝 Heard</span>
+        <button id="btn-clear-heard" class="btn-ghost btn-xs">Clear</button>
+      </div>
+      <div id="heard-box" class="heard-box scrollable">
+        <p class="placeholder">Listening for questions…</p>
+      </div>
+
+      <!-- Ask manually -->
+      <div class="manual-row">
+        <textarea id="manual-input" placeholder="Or type a question manually…" rows="2"></textarea>
+        <button id="btn-ask" class="btn-primary">Ask AI</button>
+      </div>
+
+      <!-- AI answer -->
+      <div class="section-header">
+        <span>🤖 AI Answer</span>
+        <div class="row-gap">
+          <label class="switch-label small">
+            <span>Auto-scroll</span>
+            <label class="toggle small">
+              <input type="checkbox" id="toggle-autoscroll" checked />
+              <span class="slider"></span>
+            </label>
+          </label>
+          <button id="btn-clear-answer" class="btn-ghost btn-xs">Clear</button>
+          <button id="btn-copy" class="btn-ghost btn-xs">Copy</button>
+        </div>
+      </div>
+      <div id="answer-box" class="answer-box scrollable">
+        <p class="placeholder">AI response will appear here…</p>
+      </div>
+
+      <!-- Loading indicator -->
+      <div id="loading-bar" class="loading-bar hidden">
+        <div class="loading-bar-fill"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ TRANSCRIPT TAB ══════════════════ -->
+    <div id="tab-transcript" class="tab-content hidden">
+      <div class="section-header">
+        <span>📋 Full Transcript</span>
+        <button id="btn-clear-transcript" class="btn-ghost btn-xs">Clear All</button>
+      </div>
+      <div id="transcript-box" class="transcript-box scrollable"></div>
+    </div>
+
+    <!-- ══════════════════ CONTEXT TAB ══════════════════ -->
+    <div id="tab-context" class="tab-content hidden">
+      <div class="context-section">
+        <label class="field-label">Role / Job Title</label>
+        <input type="text" id="ctx-role" placeholder="e.g. Senior Backend Engineer" class="field-input" />
+
+        <label class="field-label">Years of Experience</label>
+        <input type="number" id="ctx-yoe" placeholder="e.g. 4" class="field-input" min="0" max="40" />
+
+        <label class="field-label">Resume / Bio <span class="hint">(paste or upload)</span></label>
+        <textarea id="ctx-resume" placeholder="Paste your resume content here…" class="field-textarea" rows="8"></textarea>
+
+        <div class="upload-row">
+          <button id="btn-upload-file" class="btn-secondary">📎 Upload file (.txt/.pdf/.docx)</button>
+          <span id="upload-status" class="upload-status"></span>
+        </div>
+        <input type="file" id="file-input" accept=".txt,.pdf,.docx,.md" style="display:none" />
+
+        <label class="field-label">Additional Notes</label>
+        <textarea id="ctx-notes" placeholder="Company info, interview focus, tech stack…" class="field-textarea" rows="4"></textarea>
+
+        <button id="btn-save-context" class="btn-primary save-btn">💾 Save Context</button>
+        <span id="save-status" class="upload-status"></span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ SETTINGS TAB ══════════════════ -->
+    <div id="tab-settings" class="tab-content hidden">
+      <div class="settings-section">
+        <label class="field-label">NVIDIA API Key</label>
+        <div class="password-row">
+          <input type="password" id="set-apikey" placeholder="nvapi-…" class="field-input" autocomplete="off" />
+          <button id="btn-show-key" class="btn-ghost btn-xs">👁</button>
+        </div>
+
+        <label class="field-label">Model</label>
+        <select id="set-model" class="field-select">
+          <option value="openai/gpt-oss-120b">OpenAI GPT-OSS 120B (recommended)</option>
+          <option value="openai/gpt-oss-20b">OpenAI GPT-OSS 20B (faster)</option>
+          <option value="meta/llama-3.3-70b-instruct">Llama 3.3 70B Instruct</option>
+          <option value="meta/llama-3.1-405b-instruct">Llama 3.1 405B Instruct</option>
+          <option value="nvidia/llama-3.1-nemotron-ultra-253b-v1">Nemotron Ultra 253B</option>
+          <option value="deepseek-ai/deepseek-r1-distill-qwen-32b">DeepSeek R1 32B</option>
+        </select>
+
+        <label class="field-label">STT Language</label>
+        <select id="set-language" class="field-select">
+          <option value="en-US">English (US)</option>
+          <option value="en-IN">English (India)</option>
+          <option value="en-GB">English (UK)</option>
+          <option value="hi-IN">Hindi</option>
+        </select>
+
+        <label class="field-label">Answer Style</label>
+        <select id="set-style" class="field-select">
+          <option value="concise">Concise bullet points</option>
+          <option value="detailed">Detailed explanation</option>
+          <option value="code">Code-first</option>
+          <option value="star">STAR format (behavioral)</option>
+        </select>
+
+        <label class="field-label">Opacity</label>
+        <input type="range" id="set-opacity" min="20" max="100" value="92" class="range-input" />
+        <span id="opacity-label" class="hint">92%</span>
+
+        <label class="field-label">Window Size</label>
+        <div class="row-gap">
+          <input type="number" id="set-width" value="420" min="300" max="900" class="field-input small-num" placeholder="Width" />
+          <span class="hint">×</span>
+          <input type="number" id="set-height" value="640" min="200" max="1200" class="field-input small-num" placeholder="Height" />
+          <button id="btn-apply-size" class="btn-secondary">Apply</button>
+        </div>
+
+        <div class="divider"></div>
+        <p class="hint center">
+          <strong>Hotkeys:</strong> Ctrl+Shift+H — Show/Hide &nbsp;|&nbsp; Ctrl+Shift+X — Quit
+        </p>
+        <p class="hint center">
+          🔒 Window is <strong>invisible to screen share</strong> on macOS &amp; Windows 10 2004+
+        </p>
+
+        <button id="btn-save-settings" class="btn-primary save-btn">💾 Save Settings</button>
+        <span id="settings-status" class="upload-status"></span>
+      </div>
+    </div>
+
+    <!-- Resize handle -->
+    <div id="resize-handle" class="resize-handle" title="Drag to resize"></div>
+  </div>
+
+  <script src="../../node_modules/vosk-browser/dist/vosk.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

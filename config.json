@@ -1,0 +1,9 @@
+{
+  "baseURL": "https://integrate.api.nvidia.com/v1",
+  "apiKey": "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",
+  "models": [
+    {
+      "id": "qwen/qwen3-coder-480b-a35b-instruct",
+      "name": "qwen3-coder"
+    }
+  ]

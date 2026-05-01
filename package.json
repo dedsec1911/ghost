@@ -1,0 +1,62 @@
+{
+  "name": "ghost",
+  "version": "1.0.0",
+  "description": "ghost",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:mac": "electron-builder --mac --x64",
+    "build:win": "electron-builder --win --x64",
+    "build:all": "electron-builder --mac --win --x64"
+  },
+  "build": {
+    "appId": "com.ghost.app",
+    "productName": "ghost",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "public.app-category.utilities",
+      "hardenedRuntime": false,
+      "extendInfo": {
+        "NSCameraUseContinuityCameraDeviceType": true,
+        "NSMicrophoneUsageDescription": "ghost needs microphone access for speech-to-text.",
+        "NSAppleEventsUsageDescription": "ghost uses Apple Events for accessibility features.",
+        "NSAudioInUsageDescription": "ghost captures microphone input for speech-to-text.",
+        "NSAudioObjectUsageDescription": "ghost accesses audio devices for speech-to-text."
+      }
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "dependencies": {
+    "mammoth": "^1.6.0",
+    "node-fetch": "^2.7.0",
+    "pdf-parse": "^1.1.1",
+    "vosk-browser": "^0.0.8"
+  }
+}
