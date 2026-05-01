@@ -26,6 +26,7 @@ const state = {
   model: 'openai/gpt-oss-120b',
   language: 'en-US',
   answerStyle: 'concise',
+  stealthMode: true,
   context: { role: '', yoe: '', resume: '', notes: '' },
   transcript: [],
   answers: [],
@@ -64,6 +65,7 @@ const el = {
   setStyle:         $('set-style'),
   setOpacity:       $('set-opacity'),
   opacityLabel:     $('opacity-label'),
+  toggleStealth:    $('toggle-stealth'),
   setWidth:         $('set-width'),
   setHeight:        $('set-height'),
   btnApplySize:     $('btn-apply-size'),
@@ -656,16 +658,23 @@ function setupSettingsTab() {
   });
   el.setStyle.addEventListener('change', () => { state.answerStyle = el.setStyle.value; });
 
+  el.toggleStealth.addEventListener('change', () => {
+    state.stealthMode = el.toggleStealth.checked;
+    window.electronAPI.toggleProtection(state.stealthMode);
+  });
+
   el.btnSaveSettings.addEventListener('click', async () => {
     state.apiKey      = el.setApikey.value.trim();
     state.model       = el.setModel.value;
     state.language    = el.setLanguage.value;
     state.answerStyle = el.setStyle.value;
+    state.stealthMode = el.toggleStealth.checked;
     localStorage.setItem('ih_settings', JSON.stringify({
       apiKey:      state.apiKey,
       model:       state.model,
       language:    state.language,
       answerStyle: state.answerStyle,
+      stealthMode: state.stealthMode,
       opacity:     el.setOpacity.value,
       width:       el.setWidth.value,
       height:      el.setHeight.value,
@@ -692,6 +701,11 @@ function loadSettingsFromStorage() {
     if (s.opacity)     { el.setOpacity.value = s.opacity; el.opacityLabel.textContent = `${s.opacity}%`; }
     if (s.width)       el.setWidth.value  = s.width;
     if (s.height)      el.setHeight.value = s.height;
+    if (s.hasOwnProperty('stealthMode')) {
+      state.stealthMode = s.stealthMode;
+      el.toggleStealth.checked = s.stealthMode;
+      window.electronAPI.toggleProtection(s.stealthMode);
+    }
   } catch (e) {}
 }
 
