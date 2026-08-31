@@ -134,3 +134,21 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# macOS finder metadata
+.DS_Store
+
+# Local agent/editor state
+.claude/
+.kiro/
+
+# Downloaded speech models. The Parakeet archive is ~460 MB and the app fetches
+# it into the user's data directory on first run, so it is never committed.
+models/
+*.tar.bz2
+
+# Local secrets. config.json is committed with a placeholder API key only --
+# never commit a real nvapi- key to this public repo.
+config.local.json
+.env
+.env.*
