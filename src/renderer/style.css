@@ -143,6 +143,10 @@ html, body {
 }
 .tab-content.hidden { display: none; }
 
+/* Generic visibility helper. Declared here so anything toggled from the
+   renderer (e.g. the cloud STT fields) is actually hidden. */
+.hidden { display: none !important; }
+
 /* ─── Audio controls ──────────────────────────────── */
 .audio-controls {
   display: flex;
@@ -261,6 +265,8 @@ html, body {
 }
 .answer-box .answer-chunk:last-child { border-bottom: none; margin-bottom: 0; }
 
+/* Live "waiting for the model" line, replaced by the first streamed token. */
+.answer-box .waiting { color: var(--text-dim); font-style: italic; font-size: 11px; }
 .answer-box .q-label {
   font-size: 10px;
   color: var(--accent);
@@ -393,6 +399,24 @@ html, body {
 .field-select { cursor: pointer; }
 .field-input.small-num { width: 70px; }
 
+.model-heading, .model-select-row, .model-item { display: flex; align-items: center; gap: 8px; }
+/* Inline replacement for window.prompt(), which Electron does not support. */
+.model-add-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.model-add-row .field-input { flex: 1; min-width: 0; }
+.model-heading { justify-content: space-between; }
+.model-heading .field-label { margin: 0; }
+.model-select-row .field-select { flex: 1; min-width: 0; }
+.model-add { width: 34px; min-width: 34px; padding: 7px 0; font-size: 18px; }
+.model-list { margin: 0 0 8px; display: flex; flex-direction: column; gap: 4px; }
+.model-item { padding: 5px 7px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: rgba(255,255,255,.025); }
+.model-item-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.model-status { font-size: 10px; white-space: nowrap; }
+.model-status.working { color: #55d98a; }
+.model-status.unavailable { color: #ff6b75; }
+.model-status.checking { color: #e5be59; }
+.model-status.unknown { color: var(--text-muted); }
+.model-remove { font-size: 16px; line-height: 1; padding: 1px 5px; }
+
 .upload-row {
   display: flex;
   align-items: center;
@@ -441,6 +465,9 @@ html, body {
 .btn-primary:hover { opacity: 0.88; }
 .btn-primary:active { transform: scale(0.97); }
 .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Cancel actions, e.g. stopping an AI response that is taking too long. */
+.btn-danger { background: var(--danger); }
 
 .btn-secondary {
   background: rgba(255,255,255,0.07);

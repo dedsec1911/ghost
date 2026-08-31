@@ -46,7 +46,7 @@
         <label class="switch-label">
           <span>🔊 Speaker</span>
           <label class="toggle">
-            <input type="checkbox" id="toggle-speaker" checked />
+            <input type="checkbox" id="toggle-speaker" />
             <span class="slider"></span>
           </label>
         </label>
@@ -75,6 +75,7 @@
       <div class="manual-row">
         <textarea id="manual-input" placeholder="Or type a question manually…" rows="2"></textarea>
         <button id="btn-ask" class="btn-primary">Ask AI</button>
+        <button id="btn-stop-ai" class="btn-primary btn-danger hidden" title="Stop the AI response (Esc)">■ Stop</button>
       </div>
 
       <!-- AI answer -->
@@ -146,23 +147,73 @@
           <button id="btn-show-key" class="btn-ghost btn-xs">👁</button>
         </div>
 
-        <label class="field-label">Model</label>
-        <select id="set-model" class="field-select">
-          <option value="openai/gpt-oss-120b">OpenAI GPT-OSS 120B (recommended)</option>
-          <option value="openai/gpt-oss-20b">OpenAI GPT-OSS 20B (faster)</option>
-          <option value="meta/llama-3.3-70b-instruct">Llama 3.3 70B Instruct</option>
-          <option value="meta/llama-3.1-405b-instruct">Llama 3.1 405B Instruct</option>
-          <option value="nvidia/llama-3.1-nemotron-ultra-253b-v1">Nemotron Ultra 253B</option>
-          <option value="deepseek-ai/deepseek-r1-distill-qwen-32b">DeepSeek R1 32B</option>
-        </select>
+        <div class="model-heading">
+          <label class="field-label">Model</label>
+          <button id="btn-refresh-models" class="btn-ghost btn-xs" title="Refresh model status">↻</button>
+        </div>
+        <div class="model-select-row">
+          <select id="set-model" class="field-select"></select>
+          <button id="btn-add-model" class="btn-primary model-add" title="Add a model by ID">+</button>
+        </div>
+        <div id="add-model-row" class="model-add-row hidden">
+          <input type="text" id="new-model-id" class="field-input"
+                 placeholder="provider/model" spellcheck="false" autocomplete="off" />
+          <button id="btn-confirm-model" class="btn-primary btn-xs">Add</button>
+          <button id="btn-cancel-model" class="btn-ghost btn-xs" title="Cancel">✕</button>
+        </div>
+        <p id="add-model-hint" class="hint hidden"></p>
+        <div id="model-list" class="model-list"></div>
 
-        <label class="field-label">STT Language</label>
+        <label class="switch-label">
+          <span>🧠 Thinking Mode</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-thinking" />
+            <span class="slider"></span>
+          </label>
+        </label>
+        <p class="hint">Off is faster for interviews. Turn on only for complex reasoning; responses may take longer.</p>
+
+        <label class="switch-label">
+          <span>⚡ Stream Responses</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-streaming" checked />
+            <span class="slider"></span>
+          </label>
+        </label>
+        <p class="hint">Shows tokens as they arrive for a faster perceived response.</p>
+
+        <div class="divider"></div>
+
+        <label class="field-label">Speech-to-Text Engine</label>
+        <select id="set-stt-engine" class="field-select"></select>
+        <p id="stt-engine-hint" class="hint"></p>
+
+        <div id="stt-cloud-fields" class="hidden">
+          <label class="field-label">Cloud STT API Key</label>
+          <div class="password-row">
+            <input type="password" id="set-stt-cloud-key" placeholder="gsk_…" class="field-input" autocomplete="off" />
+            <button id="btn-show-stt-key" class="btn-ghost btn-xs">👁</button>
+          </div>
+
+          <label class="field-label">Cloud STT Base URL</label>
+          <input type="text" id="set-stt-cloud-url" class="field-input" placeholder="https://api.groq.com/openai/v1" spellcheck="false" />
+
+          <label class="field-label">Cloud STT Model</label>
+          <input type="text" id="set-stt-cloud-model" class="field-input" placeholder="whisper-large-v3-turbo" spellcheck="false" />
+          <p class="hint">Any OpenAI-compatible <code>/audio/transcriptions</code> endpoint works, including a self-hosted one.</p>
+        </div>
+
+        <label class="field-label">Speech Model Files</label>
+        <div id="stt-model-status" class="model-list"></div>
+
+        <label class="field-label">STT Language <span class="hint">(English models)</span></label>
         <select id="set-language" class="field-select">
           <option value="en-US">English (US)</option>
           <option value="en-IN">English (India)</option>
           <option value="en-GB">English (UK)</option>
-          <option value="hi-IN">Hindi</option>
         </select>
+
+        <div class="divider"></div>
 
         <label class="field-label">Answer Style</label>
         <select id="set-style" class="field-select">
@@ -175,15 +226,6 @@
         <label class="field-label">Opacity</label>
         <input type="range" id="set-opacity" min="20" max="100" value="92" class="range-input" />
         <span id="opacity-label" class="hint">92%</span>
-
-        <label class="switch-label">
-          <span>🔒 Stealth Mode</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-stealth" checked />
-            <span class="slider"></span>
-          </label>
-        </label>
-        <p class="hint">Hides window from screen capture, recordings, and screen sharing (Zoom, Meet, Teams)</p>
 
         <label class="field-label">Window Size</label>
         <div class="row-gap">
@@ -211,6 +253,7 @@
   </div>
 
   <script src="../../node_modules/vosk-browser/dist/vosk.js"></script>
+  <script src="audio-capture.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
